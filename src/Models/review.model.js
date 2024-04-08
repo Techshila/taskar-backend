@@ -12,7 +12,7 @@ const reviewSchema = new Schema({
         required:true,
     },
     review:{
-        type:String,
+        type:String, //currently thinking it  as tinymce  url
         required:true,
     }
 
