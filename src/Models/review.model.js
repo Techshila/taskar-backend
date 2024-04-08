@@ -11,7 +11,7 @@ const reviewSchema = new Schema({
         type:Number,
         required:true,
     },
-    review:{
+    reviews:{
         type:String, //currently thinking it  as tinymce  url
         required:true,
     }
