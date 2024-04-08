@@ -4,12 +4,13 @@ const categorySchema = new Schema({
         type:String,
         required:true,
         trim:true,
-        upperCase:true,
+        lowercase:true,
     },
     description:{
         type:String,
         required:true,
-    }
+    },
+
 },{timestamps:true});
 
 export const Category = model("Category",categorySchema);   
