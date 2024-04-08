@@ -43,7 +43,7 @@ const userSchema = new Schema({
         street: String, 
         city: String, 
         state: String, 
-        pinCode: String, 
+        pinCode: Number, 
     },
     role:{
         type:String,
