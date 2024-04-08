@@ -18,4 +18,4 @@ const reviewSchema = new Schema({
 
 }, {timestamps:true});
 
-const Review = model("Review",reviewSchema);
+export const Review = model("Review",reviewSchema);
