@@ -54,8 +54,7 @@ const userValidator = z.object({
       .lte(9999999999,{message:"Invalid Phone Number"})
       .gte(1000000000,{message:"Invalid Phone Number"}), 
     
-    role:z.enum(["user","storeManager","CEO"])
-      .default("user"),
+    role:z.enum(["user","storeManager","CEO"]),
 
     refereshToken : z.string(),
     
