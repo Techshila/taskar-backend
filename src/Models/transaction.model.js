@@ -17,8 +17,12 @@ const transactionSchema = new Schema({
     },
 
     items:[{
-        type:Schema.Types.ObjectId,
-        ref:"Medicine",
+        medicine:{type:Schema.Types.ObjectId,
+        ref:"Medicine",},
+        quantity:{
+            type:Number,
+            required:true,
+        },
     }],
 },{timestamps:true});
 

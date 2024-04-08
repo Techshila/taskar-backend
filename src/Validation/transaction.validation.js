@@ -9,10 +9,12 @@ const transactionValidator = z.object({
            .refine(val=> mongoose.Types.ObjectId.isValid(val),
                    val=>({message:`Invalid Store Id : ${val}`})),
     items:z.array(
-        z.string()
-        .refine(val=> mongoose.Types.ObjectId.isValid(val),     
-                val=>({message:`Invalid Medicine Id : ${val}`}))
-    ).min(1,{message:"Atleast one item is required"}),  
+        z.object({
+            medicine:z.string()
+                    .refine(val=> mongoose.Types.ObjectId.isValid(val),
+                            val=>({message:`Invalid Medicine Id : ${val}`})),
+            quantity:z.number().int().min(1,{message:"Atleast one item is required"}),
+        })),  
     paymentId:z.string(), // will try to make regex for it 
 
 });
