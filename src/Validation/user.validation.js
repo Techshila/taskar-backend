@@ -58,14 +58,15 @@ const userValidator = z.object({
 
     refereshToken : z.string(),
     
-    address:z.object({
+    addresses:z.array(z.object({
           street:z.string().trim(),
           city:z.string().trim(),
           state:z.string().trim(),
+          default:z.boolean(),
           pinCode:z.coerce.number()
                 .lte(999999,{message:"Invalid Pin Code"})
                 .gte(100000,{message:"Invalid Pin Code"}),
-        }),
+        })),
     orders:z.array(
         z.string()
         .refine(val=> mongoose.Types.ObjectId.isValid(val),

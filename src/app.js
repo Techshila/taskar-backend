@@ -21,6 +21,6 @@ app.use(express.static("public"))
 
 
 //route declarations
-
+app.use("/api/v1/address",addressRouter);
 
 export {app};

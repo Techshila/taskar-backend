@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import ApiError from "../Utils/ApiError.js";
 import { pointSchema } from "../Utils/Schema.js";
 import {Store} from "./store.model.js"
+import jwt from "jsonwebtoken";
 
 const userSchema = new Schema({
     firstName:{
@@ -40,12 +41,13 @@ const userSchema = new Schema({
         type:Number,
         required:true,
     },
-    address: { 
+    addresses: [{ 
         street: String, 
         city: String, 
         state: String, 
         pinCode: Number, 
-    },
+        default : boolean ,
+    }],
     role:{
         type:String,
         required:true,
@@ -95,6 +97,23 @@ userSchema.methods.verifyPassword = async function(password){
     throw new ApiError(500,"Error in comparing password",[err]);
     });
 
+}
+userSchema.methods.generateAccessToken = async function(){
+    return await jwt.sign(
+        {
+        _id:this._id,
+        email:this.email,
+        username:this.username,
+        name:this.firstName+" "+this.lastName,
+        role:this.role,
+        phone:this.phoneNumber,
+        },
+    )
+}
+userSchema.methods.generateRefreshToken = async function(){
+    return await jwt.sign({
+        _id:this._id,  
+    })
 }
 userSchema.methods.getStoreFromNearestToFarthest = async function(){
    let stores = await Store.find({
