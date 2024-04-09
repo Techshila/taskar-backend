@@ -19,6 +19,10 @@ app.use(express.static("public"))
 //import routes 
 
 //route declarations
+
+app.use("/api/v1/address",addressRouter);
+
 app.use('/',require('../src/Routes/index.route'));
+
 
 export {app};
