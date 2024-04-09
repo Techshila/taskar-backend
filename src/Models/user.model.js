@@ -2,6 +2,7 @@ import  {Schema , model } from "mongoose";
 import bcrypt from "bcrypt";  
 import ApiError from "../Utils/ApiError.js";
 import { pointSchema } from "../Utils/Schema.js";
+import {Store} from "./store.model.js"
 
 const userSchema = new Schema({
     firstName:{
@@ -95,5 +96,15 @@ userSchema.methods.verifyPassword = async function(password){
     });
 
 }
+userSchema.methods.getStoreFromNearestToFarthest = async function(){
+   let stores = await Store.find({
+    $near: {
+        $geometry: {
+           type: "Point" ,
+           coordinates: this.location.coordinates
+        },
+   }});
+    return stores;
+};
 
 export const User = model("User",userSchema);
