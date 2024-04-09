@@ -18,9 +18,7 @@ app.use(express.static("public"))
 
 //import routes 
 
-
-
 //route declarations
-
+app.use('/',require('./routes/index'));
 
 export {app};
