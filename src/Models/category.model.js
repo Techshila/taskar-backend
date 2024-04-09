@@ -1,4 +1,5 @@
 import {Schema,model} from "mongoose";  
+
 const categorySchema = new Schema({
     name:{
         type:String,
@@ -16,4 +17,4 @@ const categorySchema = new Schema({
 
 },{timestamps:true});
 
-export const Category = model("Category",categorySchema);   
+export const Category = model("Category",categorySchema);

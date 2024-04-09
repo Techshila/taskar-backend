@@ -1,4 +1,6 @@
 import {User} from "../Models/user.model.js";
+import { Review } from "../Models/review.model.js";
+import ApiResponse from "../Utils/ApiResponse.js";
 import {userValidator} from "../Validation/user.validation.js"
 import {makePartialValidatorByPickingKeys} from "../Utils/Zod.js"
 
@@ -50,13 +52,8 @@ const registerUser = asyncHandler(async (req, res) => {
                 errors.userName="Username already exists";
             }
         }
-        return res.status(412).json({
-            success:false,
-            data:errors,
-            status:421,
-            message:"User already exists",
-
-        })}
+       throw new ApiError(402,"User Already Exists")
+       }
 
 
      
@@ -87,3 +84,15 @@ user.refreshToken = undefined;
 const getAccessToken = async function(req,res){
    return  await jwt.sign()
 };
+
+const createreview = function (req, res) {
+    Review.create({
+      user: req.user._id,
+      rating: req.body.rating,
+      reviews: req.body.reviews,
+    });
+    res.json(new ApiResponse(200,"Created review successfully!!"));
+  };
+
+export {createreview};
+
