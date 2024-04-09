@@ -2,13 +2,19 @@ import {Schema,model} from "mongoose";
 
 const cartSchema = new Schema({
     images: [
-        {
+        [{
         type: String
-        }
+        }]
     ],
     medinames: [
         {
         type: String
+        }
+    ],
+    mediids: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Medicine'
         }
     ],
     prices: [
