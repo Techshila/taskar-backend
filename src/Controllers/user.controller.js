@@ -8,7 +8,7 @@ const createreview = function (req, res) {
       rating: req.body.rating,
       reviews: req.body.reviews,
     });
-    throw new ApiResponse(200,"Created review successfully!!");
+    res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
 export {createreview};

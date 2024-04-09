@@ -20,7 +20,7 @@ const display = async function(req,res){
                 a.push(b);
             }
         })
-    throw new ApiResponse(200,"Medicines stored!!",a);
+    res.json(new ApiResponse(200,"Medicines stored!!",a));
 };
 
 export {display};

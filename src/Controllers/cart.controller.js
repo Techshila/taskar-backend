@@ -27,6 +27,7 @@ const add = async function(req,res){
                 if(!flag){
                     e.images.push(ele[0].displayImages);
                     e.medinames.push(ele[0].name);
+                    e.mediids.push(ele[0]._id);
                     e.prices.push(ele[0].price);
                     e.count_items.push(1);
                     e.save();
@@ -34,7 +35,7 @@ const add = async function(req,res){
             }
         })
     });
-    throw new ApiResponse(200,"Added to Cart successfully!!");
+    res.json(new ApiResponse(200,"Added to Cart successfully!!"));
 };
 
 const show = async function(req,res){
@@ -74,7 +75,7 @@ const show = async function(req,res){
         totalmoney: totalprice
     }
 
-    throw new ApiResponse(200,"Cart saved and added!!",data);
+    res.json(new ApiResponse(200,"Cart saved and added!!",data));
 }
 
 const addqty = function(req,res){
@@ -92,7 +93,7 @@ const subtractqty = function(req,res){
             item.save();
         }
     })
-    throw new ApiResponse(200,"Subtracted quantity successfully!!");
+    res.json(new ApiResponse(200,"Subtracted quantity successfully!!"));
 }
 
 const del = function(req,res){
@@ -115,7 +116,7 @@ const del = function(req,res){
         item.count_items = d;
         item.save();
     })
-    throw new ApiResponse(200,"Deleted item successfully!!");
+    res.json(new ApiResponse(200,"Deleted item successfully!!"));
 }
 
 export { add,show,del,addqty,subtractqty };
