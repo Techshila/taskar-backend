@@ -1,11 +1,6 @@
 import {Schema,model} from "mongoose";
 
 const cartSchema = new Schema({
-    images: [
-        [{
-        type: String
-        }]
-    ],
     medinames: [
         {
         type: String

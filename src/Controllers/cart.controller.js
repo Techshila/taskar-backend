@@ -7,7 +7,6 @@ const add = async function(req,res){
         Cart.findOne({user:req.user._id}).then((e)=>{
             if(!e){
                 Cart.create({
-                    images:[ele[0].displayImages],
                     medinames:[ele[0].name],
                     prices:[ele[0].price],
                     mediids: [req.query.id],
@@ -16,7 +15,7 @@ const add = async function(req,res){
                 });
             }else{
                 let flag = false;
-                for(let i=0;i<e.img.length;i++){
+                for(let i=0;i<e.medinames.length;i++){
                     if(e.medinames[i]==ele[0].name){
                         let val = e.count_items[i];
                         e.count_items[i]=val+1;
@@ -25,7 +24,6 @@ const add = async function(req,res){
                     }
                 }
                 if(!flag){
-                    e.images.push(ele[0].displayImages);
                     e.medinames.push(ele[0].name);
                     e.mediids.push(ele[0]._id);
                     e.prices.push(ele[0].price);
@@ -39,13 +37,11 @@ const add = async function(req,res){
 };
 
 const show = async function(req,res){
-    let images = [];
     let medinames = [];
     let prices = [];
     let qtys = [];
     await Cart.findOne({user:req.user._id}).then((item)=>{
         if(item){
-            images = item.img;
             medinames = item.medinames;
             prices = item.prices;
             qtys = item.count_items;
@@ -67,8 +63,7 @@ const show = async function(req,res){
     }
 
     data = {
-        image: imgs,
-        productnames: prodnames,
+        medinames: medinames,
         price: prices,
         qts: qtys,
         totalcnt: totalqty,
@@ -102,15 +97,15 @@ const del = function(req,res){
         let b = [];
         let c = [];
         let d = [];
-        for(let i=0;i<item.img.length;i++){
+        for(let i=0;i<item.medinames.length;i++){
             if(i!=req.params.idx){
-                a.push(item.images[i]);
+                a.push(item.mediids[i]);
                 b.push(item.medinames[i]);
                 c.push(item.prices[i]);
                 d.push(item.count_items[i]);
             }
         }
-        item.images = a;
+        item.mediids = a;
         item.medinames = b;
         item.prices = c;
         item.count_items = d;
