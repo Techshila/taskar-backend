@@ -97,14 +97,14 @@ userSchema.methods.verifyPassword = async function(password){
 
 }
 userSchema.methods.getStoreFromNearestToFarthest = async function(){
-    let stores = await Store.find({
-     $near: {
-         $geometry: {
-            type: "Point" ,
-            coordinates: this.location.coordinates
-         },
-    }});
-     return stores;
- };
+   let stores = await Store.find({
+    $near: {
+        $geometry: {
+           type: "Point" ,
+           coordinates: this.location.coordinates
+        },
+   }});
+    return stores;
+};
 
 export const User = model("User",userSchema);
