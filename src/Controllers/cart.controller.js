@@ -40,8 +40,12 @@ const show = async function(req,res){
     let medinames = [];
     let prices = [];
     let qtys = [];
+    let medicineids = [];
+    let userId = "";
     await Cart.findOne({user:req.user._id}).then((item)=>{
         if(item){
+            userId = req.user._id;
+            medicineids = item.mediids;
             medinames = item.medinames;
             prices = item.prices;
             qtys = item.count_items;
@@ -63,9 +67,11 @@ const show = async function(req,res){
     }
 
     data = {
+        mediids: medicineids,
         medinames: medinames,
         price: prices,
         qts: qtys,
+        userId,
         totalcnt: totalqty,
         totalmoney: totalprice
     }
