@@ -1,16 +1,19 @@
 import {Router} from 'express';
-
+import cartController from '../Controllers/cart.controller.js';
+import { createreview,registerUser } from '../Controllers/user.controller.js';
+import authMiddleware from '../Middlewares/auth.middleware.js';
+import { multerUpload } from "../Middlewares/multer.middleware.js";
 const router = Router();
 
-const userController = require('../Controllers/user.controller');
-const cartController = require('../Controllers/cart.controller');
 
-router.get('/cart/',cartController.add);
-router.get('/cartshow',cartController.show);
-router.get('/add/:idx',cartController.addqty);
-router.get('/subtract/:idx',cartController.subtractqty);
-router.get('/del/:idx',cartController.del);
 
-router.post('/createreview',userController.createreview);
+router.get('/cart/',authMiddleware,cartController.add);
+router.get('/cartshow',authMiddleware,cartController.show);
+router.get('/add/:idx',authMiddleware,cartController.addqty);
+router.get('/subtract/:idx',authMiddleware,cartController.subtractqty);
+router.get('/del/:idx',authMiddleware,cartController.del);
 
-module.exports = router;
+router.post('/createreview',createreview);
+router.post("/registerUser",multerUpload.none(),registerUser);
+
+export default router;

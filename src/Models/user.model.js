@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import ApiError from "../Utils/ApiError.js";
 import { pointSchema } from "../Utils/Schema.js";
 import {Store} from "./store.model.js"
+import jwt from "jsonwebtoken";
+
 
 const userSchema = new Schema({
     firstName:{
@@ -40,17 +42,26 @@ const userSchema = new Schema({
         type:Number,
         required:true,
     },
-    address: { 
+    addresses: [{ 
         street: String, 
         city: String, 
         state: String, 
         pinCode: Number, 
+        location:{
+            type:pointSchema,
+            index:"2dsphere",
+         },
+        defaultaddress : Boolean ,
+    }],
+
+    isStoreManager:{
+        type:Boolean,
+        default:false,
     },
-    role:{
-        type:String,
-        required:true,
-        enum:["user","storeManager","CEO"],
-        default:"user"
+
+    isCEO:{
+        type:Boolean,
+        default:false,
     },
     avatar:{
         type:String, //cloudinary url
@@ -62,10 +73,7 @@ const userSchema = new Schema({
     refereshToken:{
         type:String,
     },
-    location:{
-       type:pointSchema,
-       index:"2dsphere",
-    }
+   
     
 },{
     timestamps:true,
@@ -96,15 +104,25 @@ userSchema.methods.verifyPassword = async function(password){
     });
 
 }
-userSchema.methods.getStoreFromNearestToFarthest = async function(){
-   let stores = await Store.find({
-    $near: {
-        $geometry: {
-           type: "Point" ,
-           coordinates: this.location.coordinates
+userSchema.methods.generateAccessToken = async function(){
+    return await jwt.sign(
+        {
+        _id:this._id,
+        email:this.email,
+        username:this.username,
+        name:this.firstName+" "+this.lastName,
+        role:this.role,
+        phone:this.phoneNumber,
         },
-   }});
-    return stores;
+    )
+}
+userSchema.methods.generateRefreshToken = async function(){
+    return await jwt.sign({
+        _id:this._id,  
+    })
+}
+userSchema.methods.getStoreFromNearestToFarthest = async function(){
+ 
 };
 
 export const User = model("User",userSchema);

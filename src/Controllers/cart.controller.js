@@ -1,6 +1,6 @@
-import { Cart } from "../Models/cart.model";
-import { Medicine } from "../Models/medicine.model";
-import ApiResponse from "../Utils/ApiResponse";
+import { Cart } from "../Models/cart.model.js";
+import { Medicine } from "../Models/medicine.model.js";
+import ApiResponse from "../Utils/ApiResponse.js";
 
 const add = async function(req,res){
     Medicine.find({_id:req.query.id}).then((ele)=>{
@@ -120,4 +120,4 @@ const del = function(req,res){
     res.json(new ApiResponse(200,"Deleted item successfully!!"));
 }
 
-export { add,show,del,addqty,subtractqty };
+export default  { add,show,del,addqty,subtractqty };
