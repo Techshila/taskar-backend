@@ -1,7 +1,7 @@
 import ApiError from "../Utils/ApiError.js";
 
 
-export default authMiddleware = async (req, _, next) => {
+const authMiddleware = async function(req, _, next) {
     try{
         const token = req.cookies?.accessToken||req.header("Authorization")?.replace("Bearer ","");
         if(!token){
@@ -19,4 +19,6 @@ export default authMiddleware = async (req, _, next) => {
          next(err);   
         };
     }
+
+export default authMiddleware;
 

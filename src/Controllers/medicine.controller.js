@@ -1,5 +1,5 @@
-import { Medicine } from "../Models/medicine.model";
-import ApiResponse from "../Utils/ApiResponse";
+import { Medicine } from "../Models/medicine.model.js";
+import ApiResponse from "../Utils/ApiResponse.js";
 
 const display = async function(req,res){
     let a = [];
@@ -23,4 +23,4 @@ const display = async function(req,res){
     res.json(new ApiResponse(200,"Medicines stored!!",a));
 };
 
-export {display};
+export default {display};

@@ -1,29 +1,30 @@
 import {User} from "../Models/user.model.js";
 import { Review } from "../Models/review.model.js";
+import ApiError from "../Utils/ApiError.js";
 import ApiResponse from "../Utils/ApiResponse.js";
 import {userValidator} from "../Validation/user.validation.js"
 import {makePartialValidatorByPickingKeys} from "../Utils/Zod.js"
+import {asyncHandler}  from "../Utils/asynchandler.js"
+
 
 const registerUser = asyncHandler(async (req, res) => {
     
-
-  
     
-    const {firstName,lastName,email,password,username,phoneNumber,role} = req.body;
+    const {firstName,lastName,email,password,username,phoneNumber} = req.body;
     const reqUser = {
         firstName,
         lastName,
         email,
         password,
         username,
-        phoneNumber,
-        role
+        phoneNumber, 
     };
-    const partialuserValidator = makePartialValidatorByPickingKeys(userValidator,["firstName","lastName","email","password","username","phoneNumber","role"])
+    const partialuserValidator = makePartialValidatorByPickingKeys(userValidator,["firstName","lastName","email","password","username","phoneNumber"])
 
     const safeParsedReqUser = partialuserValidator.safeParse(reqUser);
     if(!safeParsedReqUser.success){
-        throw new ApiError(489,"Invalid User Details",safeParsedReqUser.error.errors);//with express 5 if no error handler 
+        console.log(safeParsedReqUser.error);
+        throw new ApiError(489,safeParsedReqUser.error.errors[0].message,safeParsedReqUser.error.errors);//with express 5 if no error handler 
        //is found then it will be handled by express default error handler (thrown or rejected promise)
     };
     //data other than avatar is fetched and validated 
@@ -48,11 +49,11 @@ const registerUser = asyncHandler(async (req, res) => {
             if(mongoUserSearched[i].email==email){
                 errors.email="Email already exists";
             }
-            if(mongoUserSearched[i].userName==userName){
-                errors.userName="Username already exists";
+            if(mongoUserSearched[i].username==username){
+                errors.username="Username already exists";
             }
         }
-       throw new ApiError(402,"User Already Exists")
+       throw new ApiError(402,"User Already Exists",[errors])
        }
 
 
@@ -64,7 +65,6 @@ const registerUser = asyncHandler(async (req, res) => {
   try{
   user = await  User.create({
         ...reqUser,
-        avatar:avatardefault.secure_url,
     });
 }catch(err){
     throw new ApiError(500,"Error in saving user",[err],err.stack);
@@ -82,7 +82,7 @@ user.refreshToken = undefined;
 );
 
 const getAccessToken = async function(req,res){
-   return  await jwt.sign()
+   
 };
 
 const createreview = function (req, res) {
@@ -94,5 +94,5 @@ const createreview = function (req, res) {
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
-export {createreview};
+export {createreview,registerUser};
 

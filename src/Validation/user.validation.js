@@ -54,7 +54,7 @@ const userValidator = z.object({
       .lte(9999999999,{message:"Invalid Phone Number"})
       .gte(1000000000,{message:"Invalid Phone Number"}), 
     
-    role:z.enum(["user","storeManager","CEO"]),
+   
 
     refereshToken : z.string(),
     
@@ -65,17 +65,19 @@ const userValidator = z.object({
           default:z.boolean(),
           pinCode:z.coerce.number()
                 .lte(999999,{message:"Invalid Pin Code"})
-                .gte(100000,{message:"Invalid Pin Code"}),
+                .gte(100000,{message:"Invalid Pin Code"})
+                ,
+          location:z.object({
+                  type:z.enum(["Point"]),
+                  coordinates:z.array(z.number()).length(2,{message:"Invalid Coordinates"}),
+              })      
         })),
     orders:z.array(
         z.string()
         .refine(val=> mongoose.Types.ObjectId.isValid(val),
                 (val)=>({message:`Invalid Order Id: ${val}`}))  
     ),
-    location:z.object({
-        type:z.enum(["Point"]),
-        coordinates:z.array(z.number()).length(2,{message:"Invalid Coordinates"}),
-    }),
+  
 
 })
 

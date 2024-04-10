@@ -5,6 +5,7 @@ import { pointSchema } from "../Utils/Schema.js";
 import {Store} from "./store.model.js"
 import jwt from "jsonwebtoken";
 
+
 const userSchema = new Schema({
     firstName:{
         type:String,
@@ -46,13 +47,21 @@ const userSchema = new Schema({
         city: String, 
         state: String, 
         pinCode: Number, 
-        default : boolean ,
+        location:{
+            type:pointSchema,
+            index:"2dsphere",
+         },
+        defaultaddress : Boolean ,
     }],
-    role:{
-        type:String,
-        required:true,
-        enum:["user","storeManager","CEO"],
-        default:"user"
+
+    isStoreManager:{
+        type:Boolean,
+        default:false,
+    },
+
+    isCEO:{
+        type:Boolean,
+        default:false,
     },
     avatar:{
         type:String, //cloudinary url
@@ -64,10 +73,7 @@ const userSchema = new Schema({
     refereshToken:{
         type:String,
     },
-    location:{
-       type:pointSchema,
-       index:"2dsphere",
-    }
+   
     
 },{
     timestamps:true,
@@ -116,14 +122,7 @@ userSchema.methods.generateRefreshToken = async function(){
     })
 }
 userSchema.methods.getStoreFromNearestToFarthest = async function(){
-   let stores = await Store.find({
-    $near: {
-        $geometry: {
-           type: "Point" ,
-           coordinates: this.location.coordinates
-        },
-   }});
-    return stores;
+ 
 };
 
 export const User = model("User",userSchema);
