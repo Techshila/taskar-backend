@@ -72,18 +72,92 @@ const registerUser = asyncHandler(async (req, res) => {
  
 user.password = undefined;
 user.refreshToken = undefined;
+const options = {
+    httpOnly:true,
+    secure:true,
+}
  
   return res.status(201).json(
       new  ApiResponse(201,"Registeration Successful",user)
-  );
+  ).cookie("accessToken",accessToken,options)
+  ;
   }
 
   
 );
 
+const loginUser = asyncHandler(async (req,res,next)=>{
+    //extracting email or username / password from body 
+    //checking of access token and we store user details in that only 
+    //validating inputs 
+    //verifying inputs 
+    const  { email,username,password } = req.body || {}; // we might have more than these keys init 
+    //now figguring out which of the one is present either email or password 
+    //defining keys to make partial validator 
+    let keys = ["password"];
+    let  loginReq ={
+        password,
+    };
+    if(email){
+      keys.push("email");
+      loginReq.email = email;
+    }else{
+        keys.push("username");
+        loginReq.username = username;
+    }
+    //making partial schema
+    const loginValidator = makePartialValidatorByPickingKeys(userValidator,keys);
+    //validating inputs 
+    const safeParsedLogin = loginValidator.safeParse(loginReq);
+    if(!safeParsedLogin.success){
+        throw new ApiError(489,"Invalid Login Details",safeParsedLogin.error.errors);
+    }
+    //validation done 
+    //find if user exist or not 
+    let searchedUser={};
+   
+    //searching
+    try{
+    if(keys[1]=="email"){
+    searchedUser = await User.findOne({
+        email,
+    })
+    }else{
+     searchedUser = await User.findOne({
+        username,
+     })   
+    }}catch(err){
+        throw new ApiError(500,"Error in finding user",[err],err.stack);
+    }
+    //if user not found
+    (!searchedUser) && res.status(404).json(
+        new ApiResponse(404,"User does not exist",null),
+    );
+    //if user found compare password 
+   const isPasswordCorrect =  searchedUser.verifyPassword(password);
+   if(!isPasswordCorrect){
+    throw new ApiError(419,"Invalid Credentials");
+   }    
+   //now password is correct 
+   searchedUser.password = undefined;
+   searchedUser.refreshToken = undefined;
+   const options = {
+    httpOnly: true,
+    secure: true
+}
+  const accessToken = await searchedUser.generateAccessToken()
+   res.status(202)
+   .cookie("accessToken",accessToken,options)
+   .json(
+    new ApiResponse(202,"Log in Successful",searchedUser)
+   )
+})
+
 const getAccessToken = async function(req,res){
    
 };
+
+
 
 const createreview = function (req, res) {
     Review.create({
@@ -94,5 +168,5 @@ const createreview = function (req, res) {
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
-export {createreview,registerUser};
+export {createreview,registerUser,loginUser};
 

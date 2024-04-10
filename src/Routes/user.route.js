@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import cartController from '../Controllers/cart.controller.js';
-import { createreview,registerUser } from '../Controllers/user.controller.js';
+import { createreview,registerUser,loginUser } from '../Controllers/user.controller.js';
 import authMiddleware from '../Middlewares/auth.middleware.js';
 import { multerUpload } from "../Middlewares/multer.middleware.js";
 const router = Router();
@@ -15,5 +15,6 @@ router.get('/del/:idx',authMiddleware,cartController.del);
 
 router.post('/createreview',createreview);
 router.post("/registerUser",multerUpload.none(),registerUser);
+router.get("/logInUser",multerUpload.none(),loginUser)
 
 export default router;

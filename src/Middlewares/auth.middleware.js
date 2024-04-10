@@ -11,7 +11,7 @@ const authMiddleware = async function(req, _, next) {
         try{
          decodedToken = await jwt.verify(token,process.env.JWT_SECRET);//to make sure its the token made by server only not some malacious token put by user
         }catch(err){
-            throw new ApiError(491,"Malacious token");
+            throw new ApiError(491,err.message);
         }
         req.user = decodedToken;
         next();

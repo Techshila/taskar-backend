@@ -48,7 +48,7 @@ app.use("/api/v1/store",storeRouter);
 
 app.use((err,req,res,next)=>{
    res.status(err.statusCode).json(
-    new ApiResponse(err.status,err.message,err,false)
+    new ApiResponse(err.statusCode,err.message,err[0],false)
    )
 }
 )
