@@ -5,6 +5,7 @@ import { makePartialValidatorByOmmittingKeys, makePartialValidatorByPickingKeys,
 import ApiError from "../Utils/ApiError.js";
 import ApiResponse from "../Utils/ApiResponse.js";
 import {User} from "../Models/user.model.js";
+import { Medicine } from "../Models/medicine.model.js";
 
 const getNearestStore = async function(location){
     let stores = await Store.find({
@@ -120,4 +121,62 @@ const storeManagerLogin = async function(req,res){
 
  }
 
-export {getNearestStore,verifyStore,registerStore,storeManagerLogin} 
+const addToInventory = async function(req,res){
+    const {id,name,quantity} = req.body;
+    let mediId = "";
+    await Medicine.find({}).then((medicine) => {
+        if(medicine){
+            for(let i=0;i<medicine.length;i++){
+                if(medicine[i].name==name){
+                    mediId = medicine[i]._id;
+                    break;
+                }
+            }
+        }
+    })
+    if(mediId==""){
+        throw ApiError(504,"Medicine not found!!");
+    }
+    await Store.findById(id).then((store) => {
+        if(store){
+            let addInv = {medicine: mediId, quantity: quantity};
+            store.Inventory.push(addInv);
+            store.save();
+        }
+    });
+    
+    res.json(new ApiResponse(200,"Added to Inventory successfully!!"));
+}
+
+const updateInventory = async function(req,res){
+    const {id,medicine,quantity} = req.body;
+    await Store.findById(id).then((store) => {
+        let a = store.Inventory;
+        for(let i=0;i<a.length;i++){
+            if(a[i].medicine==medicine){
+                store.Inventory[i].quantity = quantity;
+                break;
+            }
+        }
+        store.save();
+    })
+    res.json(new ApiResponse(200,"Updated Inventory successfully!!"));
+}
+
+const deleteFromInventory = async function(req,res){
+    let b = [];
+    const {id,medicine} = req.body; 
+    await Store.findById(id).then((store) => {
+        let a = store.Inventory;
+        for(let i=0;i<a.length;i++){
+            if(a[i].medicine!=medicine){
+                b.push(a[i]);
+            }
+        }
+        store.Inventory = b;
+        store.save();
+    })
+    res.json(new ApiResponse(200,"Deleted from Inventory successfully!!"))
+}
+
+export {getNearestStore,verifyStore,registerStore,storeManagerLogin,addToInventory,updateInventory,deleteFromInventory} 

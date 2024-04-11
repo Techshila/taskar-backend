@@ -2,8 +2,7 @@ import { Medicine } from "../Models/medicine.model.js";
 import ApiResponse from "../Utils/ApiResponse.js";
 
 const search = async function(req,res){
-    let searchItem = req.params.id;
-    console.log(searchItem);
+    let searchItem = req.query.id;
     let a = [];
     await Medicine.find({}).then((ele) => {
         if(ele){
