@@ -104,16 +104,20 @@ userSchema.methods.verifyPassword = async function(password){
     });
 
 }
-userSchema.methods.generateAccessToken = async function(){
-    return await jwt.sign(
+userSchema.methods.generateAccessToken = function(){
+    return  jwt.sign(
         {
         _id:this._id,
         email:this.email,
         username:this.username,
         name:this.firstName+" "+this.lastName,
-        role:this.role,
         phone:this.phoneNumber,
         },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+        }
+        
     )
 }
 userSchema.methods.generateRefreshToken = async function(){

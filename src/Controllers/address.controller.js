@@ -3,6 +3,7 @@ import ApiResponse from "../Utils/ApiResponse.js";
 import ApiError from "../Utils/ApiError.js";
 import { userValidator } from "../Validation/user.validation.js";
 import { makePartialValidatorByPickingKeys } from "../Utils/Zod.js";
+import {addressesValidator}  from "../Validation/address.validation.js";
 
 
 const getAddresses = async function(req,res){
@@ -22,9 +23,10 @@ const getAddresses = async function(req,res){
 
 const updateAddresses = async function(req,res){
     const {addresses} = req.body;
-    const addressValidator = makePartialValidatorByPickingKeys(userValidator,["addresses"]);
-    const safeParsedAddresses = addressValidator.safeParse(addresses);
+    // const addressValidator = makePartialValidatorByPickingKeys(userValidator,["addresses"]);
+    const safeParsedAddresses = addressesValidator.safeParse(addresses);
     if(!safeParsedAddresses.success){
+        console.log(safeParsedAddresses.error);
         throw new ApiError(413,"Invalid addresses format");
     }
     const user_id = req.user?._id;

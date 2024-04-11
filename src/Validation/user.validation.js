@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import {ZodArray, z} from 'zod';
 import mongoose from "mongoose";
 
 const userValidator = z.object({
@@ -62,7 +62,7 @@ const userValidator = z.object({
           street:z.string().trim(),
           city:z.string().trim(),
           state:z.string().trim(),
-          default:z.boolean(),
+          defaultaddress:z.boolean(),
           pinCode:z.coerce.number()
                 .lte(999999,{message:"Invalid Pin Code"})
                 .gte(100000,{message:"Invalid Pin Code"})

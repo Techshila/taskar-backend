@@ -35,6 +35,11 @@ import storeRouter from "./Routes/store.routes.js"
 app.use("/api/v1/store",storeRouter);
 
 
+//medicine routes   
+import medicineRouter from "./Routes/medicine.route.js"
+app.use("/api/v1/medicine",medicineRouter);
+
+
 
 
 
@@ -48,7 +53,7 @@ app.use("/api/v1/store",storeRouter);
 
 app.use((err,req,res,next)=>{
    res.status(err.statusCode).json(
-    new ApiResponse(err.status,err.message,err,false)
+    new ApiResponse(err.statusCode,err.message,err[0],false)
    )
 }
 )

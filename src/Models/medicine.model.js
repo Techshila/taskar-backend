@@ -28,10 +28,6 @@ const medicineSchema = new Schema({
         type:String, //might get a link from timyMCE
         required:true,
     },
-    expiration:{
-        type:Date,
-        required:true,
-    },
     reviews:[{
         type:Schema.Types.ObjectId,
         ref:"Review",
