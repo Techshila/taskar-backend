@@ -160,7 +160,22 @@ const loginUser = asyncHandler(async (req,res,next)=>{
 const getAccessToken = async function(req,res){
    
 };
-
+const updateUser = async function(req,res){
+    const {firstName,lastName,email,password,username,phoneNumber} = req.body;
+    const reqUser = {firstName,lastName,email,password,username,phoneNumber}
+    const updatedUserValidator = userValidator.deepPartial();
+    const safeParsedUpdatedUser = updatedUserValidator.safeParse(updatedUserValidator);
+    if(!safeParsedUpdatedUser.success){
+        throw new ApiError(489,"Invalid User Details",safeParsedUpdatedUser.error.errors);
+    }
+    const userId = req.user._id;
+  const updatedUser = await  User.findByIdAndUpdate(userId,
+       reqUser,
+    {new:true});
+    updateUser.password = undefined;
+    updateUser.refreshToken = undefined;
+    res.json(new ApiResponse(200,"User Updated Successfully",updatedUser));
+};
 
 
 const createreview = function (req, res) {
@@ -172,5 +187,5 @@ const createreview = function (req, res) {
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
-export {createreview,registerUser,loginUser};
+export {createreview,registerUser,loginUser,updateUser};
 

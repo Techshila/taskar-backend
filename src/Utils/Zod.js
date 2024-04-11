@@ -17,6 +17,7 @@ const makePartialValidatorByPickingKeys = (zodValidator,keys) => {
             throw new ApiError(400,`Invalid User field choosen to make partial zodSchema: ${key}`);
         }
     }
+    console.log(options);
     return zodValidator.pick(options);
 };
 const makePartialValidatorByOmmittingKeys = (zodValidator,keys) => {
