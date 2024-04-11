@@ -15,8 +15,11 @@ const transactionValidator = z.object({
                             val=>({message:`Invalid Medicine Id : ${val}`})),
             quantity:z.number().int().min(1,{message:"Atleast one item is required"}),
         })),  
-    paymentId:z.string(), // will try to make regex for it 
+    paymentId:z.string().uuid(),
+    isComplete:z.boolean(),
+    amount:z.number().int().positive(),
+    } // will try to make regex for it 
 
-});
+);
 
 export {transactionValidator};
