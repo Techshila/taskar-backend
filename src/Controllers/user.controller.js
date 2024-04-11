@@ -158,10 +158,18 @@ const loginUser = asyncHandler(async (req,res,next)=>{
     new ApiResponse(202,"Log in Successful",searchedUser)
    )
 })
+const deleteUser = async function(req,res){
+    const userId = req.user?._id;
+    if(!userId){
+        throw new ApiError(401,"Unauthorized User");
+    }
+    const deleted = await User.deleteOne({_id:userId});
+    if(!deleted){
+        throw new ApiError(500,"Error in deleting user");
+    }
+    res.status(200).json(new ApiResponse(200,"User Deleted Successfully",{}));
+}
 
-const getAccessToken = async function(req,res){
-  
-};
 const logOut = async function(req,res){
    const userId = req.user?._id; 
    if(!userId){
@@ -229,5 +237,5 @@ const createreview = async function (req, res) {
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
-export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut};
+export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut,deleteUser};
 

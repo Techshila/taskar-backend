@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import cartController from '../Controllers/cart.controller.js';
-import { createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut } from '../Controllers/user.controller.js';
+import { createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut ,deleteUser} from '../Controllers/user.controller.js';
 import authMiddleware from '../Middlewares/auth.middleware.js';
 import { multerUpload } from "../Middlewares/multer.middleware.js";
 import { search } from '../Controllers/search.controller.js';
@@ -22,4 +22,5 @@ router.get("/logInUser",multerUpload.none(),loginUser)
 router.post("/updateUser",authMiddleware,multerUpload.none(),updateUser);
 router.post("/updateUserAvatar",authMiddleware,multerUpload.single("avatar"),updateUserAvatar);
 router.post("/logOut",authMiddleware,logOut);
+router.post("/deleteUser",authMiddleware,deleteUser);
 export default router;
