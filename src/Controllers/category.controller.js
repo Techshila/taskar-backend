@@ -39,7 +39,7 @@ const deleteCategory = async (req, res) => {
   }
 
 const fetchCategory = async (req,res) => {
-    let a = [];
+    let categories = [];
     await Category.find({}).then((cat) => {
         if(cat){
             for(let i=0;i<cat.length;i++){
@@ -47,11 +47,11 @@ const fetchCategory = async (req,res) => {
                 let onecat = cat[i];
                 b.push(onecat._id);
                 b.push(onecat.name);
-                a.push(b);
+                categories.push(b);
             }
         }
     })
-    res.json(new ApiResponse(200,"Fetched Category successfully!!",a));
+    res.json(new ApiResponse(200,"Fetched Category successfully!!",categories));
 }
 
 export {addCategory ,fetchCategory, deleteCategory};
