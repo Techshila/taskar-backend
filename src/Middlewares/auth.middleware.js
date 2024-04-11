@@ -1,5 +1,5 @@
 import ApiError from "../Utils/ApiError.js";
-
+import jwt from "jsonwebtoken";
 
 const authMiddleware = async function(req, _, next) {
     try{
@@ -9,7 +9,7 @@ const authMiddleware = async function(req, _, next) {
         }
         let decodedToken= {};
         try{
-         decodedToken = await jwt.verify(token,process.env.JWT_SECRET);//to make sure its the token made by server only not some malacious token put by user
+         decodedToken = await jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);//to make sure its the token made by server only not some malacious token put by user
         }catch(err){
             throw new ApiError(491,err.message);
         }

@@ -146,6 +146,7 @@ const loginUser = asyncHandler(async (req,res,next)=>{
     secure: true
 }
   const accessToken = await searchedUser.generateAccessToken()
+  console.log(accessToken);
    res.status(202)
    .cookie("accessToken",accessToken,options)
    .json(

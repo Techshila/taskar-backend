@@ -62,7 +62,7 @@ const show = async function(req,res){
         totalprice+=priceone*qtys[i];
     }
 
-    data = {
+   let data = {
         medinames: medinames,
         price: prices,
         qts: qtys,
