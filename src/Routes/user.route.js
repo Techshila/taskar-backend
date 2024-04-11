@@ -9,9 +9,9 @@ const router = Router();
 
 router.get('/cart/',authMiddleware,cartController.add);
 router.get('/cartshow',authMiddleware,cartController.show);
-router.get('/add/:idx',authMiddleware,cartController.addqty);
-router.get('/subtract/:idx',authMiddleware,cartController.subtractqty);
-router.get('/del/:idx',authMiddleware,cartController.del);
+router.get('/cart/add/:idx',authMiddleware,cartController.addqty);
+router.get('/cart/subtract/:idx',authMiddleware,cartController.subtractqty);
+router.get('/cart/del/:idx',authMiddleware,cartController.del);
 
 
 router.post('/createreview',createreview);

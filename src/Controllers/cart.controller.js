@@ -78,7 +78,7 @@ const addqty = function(req,res){
         item.count_items[req.params.idx]+=1;
         item.save();
     })
-    throw new ApiResponse(200,"Added quantity successfully!!");
+    res.status(200).json(new ApiResponse(200,"Added quantity successfully!!"));
 }
 
 const subtractqty = function(req,res){
@@ -88,7 +88,7 @@ const subtractqty = function(req,res){
             item.save();
         }
     })
-    res.json(new ApiResponse(200,"Subtracted quantity successfully!!"));
+    res.status(200).json(new ApiResponse(200,"Subtracted quantity successfully!!"));
 }
 
 const del = function(req,res){
