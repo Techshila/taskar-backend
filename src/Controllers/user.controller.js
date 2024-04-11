@@ -159,7 +159,7 @@ const loginUser = asyncHandler(async (req,res,next)=>{
 })
 
 const getAccessToken = async function(req,res){
-   
+  
 };
 const logOut = async function(req,res){
     
