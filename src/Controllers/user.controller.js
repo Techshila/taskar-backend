@@ -5,6 +5,7 @@ import ApiResponse from "../Utils/ApiResponse.js";
 import {userValidator} from "../Validation/user.validation.js"
 import {makePartialValidatorByPickingKeys} from "../Utils/Zod.js"
 import {asyncHandler}  from "../Utils/asynchandler.js"
+import uploadOnCloud from "../Utils/Cloudinary.js"
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -176,8 +177,23 @@ const updateUser = async function(req,res){
     updateUser.refreshToken = undefined;
     res.json(new ApiResponse(200,"User Updated Successfully",updatedUser));
 };
-
-
+const updateUserAvatar = async function(req,res){
+    const userId = req.user._id;
+    const avatartLocalPath = req.file?.path;
+    if(!avatartLocalPath){
+        throw new ApiError(489,"No file uploaded");
+    }
+    const avatarCloudinary = await uploadOnCloud(avatartLocalPath);
+    if(!avatarCloudinary){
+        throw new ApiError(489,"Error in uploading avatar");
+    }
+    const avatartCloudinaryPath = avatarCloudinary.secure_url;
+    const user = await User.findByIdAndUpdate(userId,{avatar:avatartCloudinaryPath},{new:true});
+    res.status(203).json(
+        new ApiResponse(203,"Avatar Updated Successfully",user.avatar)
+    );
+    
+}
 const createreview = function (req, res) {
     Review.create({
       user: req.user._id,
@@ -187,5 +203,5 @@ const createreview = function (req, res) {
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
-export {createreview,registerUser,loginUser,updateUser};
+export {createreview,registerUser,loginUser,updateUser,updateUserAvatar};
 
