@@ -1,6 +1,7 @@
 import { Category } from "../Models/category.model.js";
 import ApiError from "../Utils/ApiError.js";
 import ApiResponse from "../Utils/ApiResponse.js";
+import uploadOnCloud from "../Utils/Cloudinary.js";
 
 const AdminId = process.env.ADMIN_ID;
 
@@ -18,12 +19,12 @@ const addCategory = async (req, res) => {
     if(!imageCloudinary){
         throw new ApiError(489,"Error in uploading avatar");
     }
-    const imageCloudinaryPath = avatarCloudinary.secure_url;
+    const imageCloudinaryPath = imageCloudinary.secure_url;
 
     await Category.create({
         name: name,
-        description: imageCloudinaryPath,
-        image: image
+        description: description,
+        image: imageCloudinaryPath
     });
     res.json(new ApiResponse(200,"Added Category successfully!!"));
 }
@@ -46,8 +47,8 @@ const fetchCategory = async (req,res) => {
                 let onecat = cat[i];
                 b.push(onecat._id);
                 b.push(onecat.name);
+                a.push(b);
             }
-            a.push(b);
         }
     })
     res.json(new ApiResponse(200,"Fetched Category successfully!!",a));
