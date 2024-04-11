@@ -6,6 +6,7 @@ import {userValidator} from "../Validation/user.validation.js"
 import {makePartialValidatorByPickingKeys} from "../Utils/Zod.js"
 import {asyncHandler}  from "../Utils/asynchandler.js"
 import uploadOnCloud from "../Utils/Cloudinary.js"
+import { Medicine } from "../Models/medicine.model.js";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -194,12 +195,23 @@ const updateUserAvatar = async function(req,res){
     );
     
 }
-const createreview = function (req, res) {
-    Review.create({
+const createreview = async function (req, res) {
+    let reviewId = "";
+    await Review.create({
       user: req.user._id,
       rating: req.body.rating,
       reviews: req.body.reviews,
+    }).then((ele) => {
+        reviewId = ele._id;
     });
+    let mediid = req.params.id;
+    console.log(mediid);
+    console.log(reviewId);
+    await Medicine.findById(mediid).then((ele) => {
+        console.log(ele);
+        ele.reviews.push(reviewId);
+        ele.save();
+    })
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 

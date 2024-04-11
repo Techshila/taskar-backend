@@ -16,7 +16,7 @@ router.get('/cart/del/:idx',authMiddleware,cartController.del);
 router.get('/search/:id',search);
 
 
-router.post('/createreview',createreview);
+router.post('/createreview/:id',authMiddleware,createreview);
 router.post("/registerUser",multerUpload.none(),registerUser);
 router.get("/logInUser",multerUpload.none(),loginUser)
 router.post("/updateUser",authMiddleware,multerUpload.none(),updateUser);
