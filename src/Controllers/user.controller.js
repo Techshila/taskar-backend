@@ -151,7 +151,7 @@ const loginUser = asyncHandler(async (req,res,next)=>{
     secure: true
 }
   const accessToken = await searchedUser.generateAccessToken()
-  console.log(accessToken);
+
    res.status(202)
    .cookie("accessToken",accessToken,options)
    .json(
@@ -162,6 +162,20 @@ const loginUser = asyncHandler(async (req,res,next)=>{
 const getAccessToken = async function(req,res){
   
 };
+const logOut = async function(req,res){
+   const userId = req.user?._id; 
+   if(!userId){
+       throw new ApiError(401,"Unauthorized User");
+   }
+   const options = {
+    httpOnly: true,
+    secure: true,
+   }
+   res.status(201)
+   .clearCookie("accessToken",options)
+   .json(new ApiResponse(201,"Logged Out Successfully",{}));
+   
+}
 const updateUser = async function(req,res){
     const {firstName,lastName,email,password,username,phoneNumber} = req.body;
     const reqUser = {firstName,lastName,email,password,username,phoneNumber}
@@ -215,5 +229,5 @@ const createreview = async function (req, res) {
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
 
-export {createreview,registerUser,loginUser,updateUser,updateUserAvatar};
+export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut};
 

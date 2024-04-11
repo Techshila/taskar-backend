@@ -94,7 +94,7 @@ const subtractqty = function(req,res){
             item.save();
         }
     })
-    res.json(new ApiResponse(200,"Subtracted quantity successfully!!"));
+    res.status(200).json(new ApiResponse(200,"Subtracted quantity successfully!!"));
 }
 
 const del = function(req,res){

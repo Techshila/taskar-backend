@@ -18,7 +18,7 @@ const storeSchema = new Schema({
         },
         quantity:{
             type:Number,
-            required:true,
+            default:0,
         }
     }]
 
