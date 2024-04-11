@@ -45,13 +45,13 @@ const fetchCategory = async (req,res) => {
             for(let i=0;i<cat.length;i++){
                 let b = [];
                 let onecat = cat[i];
-                b.push(onecat._id);
-                b.push(onecat.name);
+                b.push(onecat);
                 categories.push(b);
             }
         }
     })
     res.json(new ApiResponse(200,"Fetched Category successfully!!",categories));
 }
+
 
 export {addCategory ,fetchCategory, deleteCategory};
