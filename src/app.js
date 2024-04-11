@@ -28,7 +28,7 @@ import userRouter from "./Routes/user.route.js"
 app.use("/api/v1/user",userRouter);
 //index routes
 import indexRouter from "./Routes/index.route.js"
-app.use('/',indexRouter);
+app.use('/api/v1',indexRouter);
 //category routes
 import categoryRouter from "./Routes/category.route.js"
 app.use("/api/v1/category",categoryRouter);

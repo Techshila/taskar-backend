@@ -79,22 +79,15 @@ const show = async function(req,res){
     res.json(new ApiResponse(200,"Cart saved and added!!",data));
 }
 
-const addqty = function(req,res){
-    Cart.findOne({user:req.user._id}).then((item)=>{
-        item.count_items[req.params.idx]+=1;
+const updateCart = async function(req,res) {
+    await Cart.find({}).then((item) => {
+        item.mediids = req.body.medicineids;
+        item.medinames = req.body.medinames;
+        item.prices = req.body.price;
+        item.count_items = req.body.qts;
         item.save();
-    })
-    res.json(new ApiResponse(200,"Added quantity successfully!!"));
-}
-
-const subtractqty = function(req,res){
-    Cart.findOne({user:req.user._id}).then((item)=>{
-        if(item.count_items[req.params.idx]>1){
-            item.count_items[req.params.idx]-=1;
-            item.save();
-        }
-    })
-    res.status(200).json(new ApiResponse(200,"Subtracted quantity successfully!!"));
+    });
+    res.json(new ApiResponse(200,"Updated Cart successfully!!"));
 }
 
 const del = function(req,res){
@@ -120,4 +113,4 @@ const del = function(req,res){
     res.json(new ApiResponse(200,"Deleted item successfully!!"));
 }
 
-export default  { add,show,del,addqty,subtractqty };
+export default  { add,show,del,updateCart };

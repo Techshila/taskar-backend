@@ -10,8 +10,7 @@ const router = Router();
 
 router.get('/cart/',authMiddleware,cartController.add);
 router.get('/cartshow',authMiddleware,cartController.show);
-router.get('/cart/add/:idx',authMiddleware,cartController.addqty);
-router.get('/cart/subtract/:idx',authMiddleware,cartController.subtractqty);
+router.get('/updatecart',authMiddleware,cartController.updateCart);
 router.get('/cart/del/:idx',authMiddleware,cartController.del);
 router.get('/search/:id',search);
 
