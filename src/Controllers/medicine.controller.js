@@ -69,5 +69,34 @@ const addMedicine = async function(req,res){
     }
     res.status(201).json(new ApiResponse(201, "Medicine created", medicine));
 }
+const fetchMedicineByCategory = async function(req,res){
+    console.log(req.query)
+    const categoryID = req.query?.categoryID;
+    if(!categoryID){
+        throw new ApiError(400,"Category ID is required!!");
+    }
+   const medicines= await Medicine.aggregate(
+        [
+            [
+                {
+                  '$unwind': {
+                    'path': '$categories', 
+                    'preserveNullAndEmptyArrays': false
+                  }
+                }, {
+                  '$match': {
+                    'categories': categoryID,
+                  }
+                }, {
+                  '$limit': 30
+                }
+              ]
+          ]
+    );
+    if(!medicines){
+        throw new ApiError(500,"Error in fetching medicines!!");
+    }
+    res.status(200).json(new ApiResponse(200,"Fetched Medicines successfully!!",{medicines}));
+}
 
-export  {display,addMedicine};
+export  {display,addMedicine,fetchMedicineByCategory};
