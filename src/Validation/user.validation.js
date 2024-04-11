@@ -1,4 +1,4 @@
-import {ZodArray, z} from 'zod';
+import {z} from 'zod';
 import mongoose from "mongoose";
 
 const userValidator = z.object({
