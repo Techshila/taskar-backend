@@ -13,7 +13,7 @@ const medicineValidator = z.object({
     categories: z.array(z.string()
                         .refine(val=> mongoose.Types.ObjectId.isValid(val),
                                 val=>({message:`Invalid Category Id : ${val}`}))),
-    description: z.string().url(),
+    description: z.string(),
     reviews: z.array(z.string()
                     .refine(val=> mongoose.Types.ObjectId.isValid(val),
                             val=>({message:`Invalid Review Id : ${val}`}))),

@@ -23,7 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const safeParsedReqUser = partialuserValidator.safeParse(reqUser);
     if(!safeParsedReqUser.success){
-        console.log(safeParsedReqUser.error);
+        // console.log(safeParsedReqUser.error);
         throw new ApiError(489,safeParsedReqUser.error.errors[0].message,safeParsedReqUser.error.errors);//with express 5 if no error handler 
        //is found then it will be handled by express default error handler (thrown or rejected promise)
     };
@@ -69,17 +69,20 @@ const registerUser = asyncHandler(async (req, res) => {
 }catch(err){
     throw new ApiError(500,"Error in saving user",[err],err.stack);
 }
- 
+const accessToken = await user.generateAccessToken()
 user.password = undefined;
 user.refreshToken = undefined;
 const options = {
     httpOnly:true,
     secure:true,
 }
+
  
-  return res.status(201).json(
+  return res.status(201)
+  .cookie("accessToken",accessToken,options)
+  .json(
       new  ApiResponse(201,"Registeration Successful",user)
-  ).cookie("accessToken",accessToken,options)
+  )
   ;
   }
 
