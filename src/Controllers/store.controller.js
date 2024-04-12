@@ -45,7 +45,7 @@ const verifyStore = async function(req,res){
   if(!storeId){
       throw new ApiError(400,"StoreId is required!!");
   }
-  const store = await Store.findByIdAndUpdate({storeId},{isVerified:true},{new:true});
+  const store = await Store.findByIdAndUpdate(storeId,{isVerified:true},{new:true});
   if(!store){
       throw new ApiError(500,"Error in verifying store!!");
   }

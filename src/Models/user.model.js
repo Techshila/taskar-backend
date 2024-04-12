@@ -79,31 +79,29 @@ const userSchema = new Schema({
     timestamps:true,
 })
 // userSchema.index({location:"2dsphere"});   //geospatial indexing need to read about it a bit first 
-userSchema.pre("save",async function(next){
-    if(!this.isModified("password")){
-        next();
-    };
-    bcrypt.hash(this.password,10)
-    .then((token)=>{
-        this.password = token;
-       next();
-    }).catch((err)=>{
-        next(err);
-    });
+userSchema.pre("save", async function(next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
 
+    try {
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        this.password = hashedPassword;
+        console.log(this);
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 
-userSchema.methods.verifyPassword = async function(password){
-    let isMatch;
-    bcrypt.compare(password,this.password)
-    .then((result)=>{
-        isMatch = result;    
-    })
-    .catch((err)=>{
-    throw new ApiError(500,"Error in comparing password",[err]);
-    });
-
-}
+userSchema.methods.verifyPassword = async function(password) {
+    try {
+        const isMatch = await bcrypt.compare(password, this.password);
+        return isMatch;
+    } catch (err) {
+        throw new ApiError(500, "Error in comparing password", [err]);
+    }
+};
 userSchema.methods.generateAccessToken = function(){
     return  jwt.sign(
         {
