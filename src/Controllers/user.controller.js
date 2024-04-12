@@ -269,5 +269,25 @@ const getNearestStore = async function(req,res){
     res.json(new ApiResponse(200,"Nearest Store Found",store));
 }
 
-export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut,deleteUser,getNearestStore};
+const getUser = async function(req,res){
+        try {
+          // Get the access token from the Authorization header
+          const accessToken = req.headers.authorization;
+      
+          // Find the user with the provided access token
+          const user = await User.findOne({ firstName:"Karthik" });
+      
+          if (!user) {
+            return res.status(401).json({ error: 'Invalid access token' });
+          }
+      
+          // Return the user data
+          res.json(user);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal server error' });
+        }
+};
+
+export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut,deleteUser,getNearestStore,getUser};
 

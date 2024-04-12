@@ -58,15 +58,12 @@ const show = async function(req,res){
     let totalprice = 0;
     for(let i=0;i<prices.length;i++){
         let priceone=0;
-        for(let j=0;j<prices[i].length;j++){
-            if(prices[i].charCodeAt(j)>=48 && prices[i].charCodeAt(j)<=57){
-                priceone=priceone*10+(prices[i][j]-'0');
-            }
-        }
-        totalprice+=priceone*qtys[i];
+        totalprice+=Number(prices[i])*qtys[i];
     }
 
-    data = {
+
+
+    res.json(new ApiResponse(200,"Cart saved and added!!",{
         mediids: medicineids,
         medinames: medinames,
         price: prices,
@@ -74,9 +71,7 @@ const show = async function(req,res){
         userId,
         totalcnt: totalqty,
         totalmoney: totalprice
-    }
-
-    res.json(new ApiResponse(200,"Cart saved and added!!",data));
+    }));
 }
 
 const updateCart = async function(req,res) {
@@ -88,6 +83,24 @@ const updateCart = async function(req,res) {
         item.save();
     });
     res.json(new ApiResponse(200,"Updated Cart successfully!!"));
+}
+
+const addqty = function(req,res){
+    Cart.findOne({user:req.user._id}).then((item)=>{
+        item.count_items[req.params.idx]+=1;
+        item.save();
+    })
+    res.json(new ApiResponse(200,"Added quantity successfully!!"));
+}
+
+const subtractqty = function(req,res){
+    Cart.findOne({user:req.user._id}).then((item)=>{
+        if(item.count_items[req.params.idx]>1){
+            item.count_items[req.params.idx]-=1;
+            item.save();
+        }
+    })
+    res.status(200).json(new ApiResponse(200,"Subtracted quantity successfully!!"));
 }
 
 const del = function(req,res){
@@ -113,4 +126,4 @@ const del = function(req,res){
     res.json(new ApiResponse(200,"Deleted item successfully!!"));
 }
 
-export default  { add,show,del,updateCart };
+export default  { add,show,del,updateCart,addqty,subtractqty };

@@ -12,23 +12,24 @@ const display = async function(req,res){
         .sort("-createdAt")
         .then((medicines)=>{
             for(let i=0; i<medicines.length; i++){
-                var b = [];
-                b.push(medicines[i].name);
-                b.push(medicines[i].manufacturer);
-                b.push(medicines[i].price);
-                b.push(medicines[i].displayImages);
-                b.push(medicines[i].categories);
-                b.push(medicines[i].description);
-                b.push(medicines[i].expiration);
-                b.push(medicines[i].reviews);
+                var b = {};
+                b.id = (medicines[i]._id)
+                b.name = (medicines[i].name);
+                b.manufacturer = (medicines[i].manufacturer);
+                b.price = (medicines[i].price);
+                b.displayImages = (medicines[i].displayImages);
+                b.categories = (medicines[i].categories);
+                b.description = (medicines[i].description);
+                b.expiration = (medicines[i].expiration);
+                b.reviews = (medicines[i].reviews);
                 a.push(b);
             }
         })
     res.json(new ApiResponse(200,"Medicines stored!!",a));
 };
 const addMedicine = async function(req,res){
-    const {name,manufacturer,price,categories,description,reviews} = req.body;
-    const reqMedicine = {name,manufacturer,price,categories,description,reviews}
+    const {name,manufacturer,price,categories,displayImages,description,reviews} = req.body;
+    const reqMedicine = {name,manufacturer,price,categories,displayImages,description,reviews}
     const addMedicineValidator = makefieldsOptionalInValidator(medicineValidator,["reviews","categories","displayImages"]);
   
     const saferParsedMedicine = addMedicineValidator.safeParse(reqMedicine);
@@ -36,33 +37,32 @@ const addMedicine = async function(req,res){
     if (!saferParsedMedicine.success) {
         throw new ApiError(489, saferParsedMedicine.error.errors[0].message, saferParsedMedicine.error.errors);
     }
-    let displayImagesLocalPath = [];
+    // let displayImagesLocalPath = [];
 
-    if(req.files?.length>0){
-    for (let i = 0; i < req.files?.length; i++) {
+    // if(req.files?.length>0){
+    // for (let i = 0; i < req.files?.length; i++) {
         
-        displayImagesLocalPath.push(req.files[i].path);
-    }
-    }
-    //uploading on cloudinary
-    let displayImagesCloudinaryPath = [];
-    if(displayImagesLocalPath.length>0){
-        for(let i=0;i<displayImagesLocalPath.length;i++){
-            try{
-            let image = await uploadOnCloud(displayImagesLocalPath[i]);
-            displayImagesCloudinaryPath[i] = image.secure_url;
+    //     displayImagesLocalPath.push(req.files[i].path);
+    // }
+    // }
+    // //uploading on cloudinary
+    // let displayImagesCloudinaryPath = [];
+    // if(displayImagesLocalPath.length>0){
+    //     for(let i=0;i<displayImagesLocalPath.length;i++){
+    //         try{
+    //         let image = await uploadOnCloud(displayImagesLocalPath[i]);
+    //         displayImagesCloudinaryPath[i] = image.secure_url;
             
-            }catch(err){
-                throw new ApiError(500,"Error in uploading image",[err]);
-        }
-    }
+    //         }catch(err){
+    //             throw new ApiError(500,"Error in uploading image",[err]);
+    //     }
+    // }
     
-    }
+    // }
     
 
     const medicine = await Medicine.create({
         ...reqMedicine,
-        displayImages: displayImagesCloudinaryPath
     });
     if (!medicine) {
         throw new ApiError(500, "Error in creating medicine");

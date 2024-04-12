@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import cartController from '../Controllers/cart.controller.js';
-import { createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut ,deleteUser,getNearestStore} from '../Controllers/user.controller.js';
+import { createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut ,deleteUser,getNearestStore, getUser} from '../Controllers/user.controller.js';
 import authMiddleware from '../Middlewares/auth.middleware.js';
 import { multerUpload } from "../Middlewares/multer.middleware.js";
 import { search } from '../Controllers/search.controller.js';
@@ -12,7 +12,10 @@ router.get('/cart/',authMiddleware,cartController.add);
 router.get('/cartshow',authMiddleware,cartController.show);
 router.get('/updatecart',authMiddleware,cartController.updateCart);
 router.get('/cart/del/:idx',authMiddleware,cartController.del);
+router.get('/cart/add/:idx',authMiddleware,cartController.addqty);
+router.get('/cart/sub/:idx',authMiddleware,cartController.subtractqty);
 router.get('/search/:id',search);
+router.get('/user/',getUser);
 
 
 router.post('/createreview/:id',authMiddleware,createreview);
