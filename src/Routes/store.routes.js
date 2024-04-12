@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { getNearestStore ,registerStore,verifyStore,storeManagerLogin, addToInventory, deleteFromInventory, updateInventory, fetchVerifiedStore, fetchUnVerifiedStore ,fetchCompletedOrders} from "../Controllers/store.controller.js";
+import { getNearestStore ,registerStore,verifyStore,storeManagerLogin, addToInventory, deleteFromInventory, updateInventory, fetchVerifiedStore, fetchUnVerifiedStore ,fetchCompletedOrders, fetchPendingOrders, VerifyingOrder} from "../Controllers/store.controller.js";
 import authMiddleware from "../Middlewares/auth.middleware.js";
 import { multerUpload } from "../Middlewares/multer.middleware.js";
 
@@ -18,6 +18,8 @@ router.post("/deleteInventory",authMiddleware,deleteFromInventory);
 router.post("/updateInventory",authMiddleware,updateInventory);
 
 router.post("/fetchCompletedOrders",fetchCompletedOrders);
+router.post("/fetchpendingorder",fetchPendingOrders);
+router.post("/verifyorder",VerifyingOrder);
 
 
 export default router;

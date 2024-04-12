@@ -244,7 +244,7 @@ const fetchUnVerifiedStore = async function(req,res){
 }
 
 const fetchPendingOrders = async function(req,res){
-    const {storeid} = req.body.storeid;
+    const {storeid} = req.body;
     const Orders = await Transaction.find({store:storeid,isComplete:false});
     if(!Orders){
         throw new ApiError(500,"Error in fetching Orders!!");
