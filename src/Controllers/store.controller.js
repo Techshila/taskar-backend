@@ -152,6 +152,9 @@ const addToInventory = async function(req,res){
         throw ApiError(504,"Medicine not found!!");
     }
     await Store.findById(id).then((store) => {
+        if(!store){
+            throw new ApiError(504,"Store does not exist!!");
+        }
         if(store){
             let addInv = {medicine: mediId, quantity: quantity};
             store.Inventory.push(addInv);
@@ -165,6 +168,9 @@ const addToInventory = async function(req,res){
 const updateInventory = async function(req,res){
     const {id,medicine,quantity} = req.body;
     await Store.findById(id).then((store) => {
+        if(!store){
+            throw new ApiError(504,"Store does not exist!!");
+        }
         let a = store.Inventory;
         for(let i=0;i<a.length;i++){
             if(a[i].medicine==medicine){
@@ -181,6 +187,9 @@ const deleteFromInventory = async function(req,res){
     let b = [];
     const {id,medicine} = req.body; 
     await Store.findById(id).then((store) => {
+        if(!store){
+            throw new ApiError(504,"Store does not exist!!");
+        }
         let a = store.Inventory;
         for(let i=0;i<a.length;i++){
             if(a[i].medicine!=medicine){
@@ -193,4 +202,45 @@ const deleteFromInventory = async function(req,res){
     res.json(new ApiResponse(200,"Deleted from Inventory successfully!!"))
 }
 
-export {getNearestStore,verifyStore,registerStore,storeManagerLogin,addToInventory,updateInventory,deleteFromInventory} 
+const fetchVerifiedStore = async function(req,res){
+    const  requserId = req.user?._id;
+    if(!requserId){
+        throw new ApiError(482,"Unauthorised Request");
+    }
+    if(requserId!=process.env.ADMIN_ID){
+        throw new ApiError(481,"Unauthorised Request");
+    }
+    let verifiedStore = [];
+    await Store.find({})
+    .populate("manager")
+    .then((stores) => {
+        for(let i=0;i<stores.length;i++){
+            if(stores[i].isVerified==true){
+                verifiedStore.push(stores[i]);
+            }
+        }
+    })
+    res.json(new ApiResponse(200,"Fetched verified store successfully!!",verifiedStore));
+}
+
+const fetchUnVerifiedStore = async function(req,res){
+    if(!requserId){
+        throw new ApiError(482,"Unauthorised Request");
+    }
+    if(requserId!=process.env.ADMIN_ID){
+        throw new ApiError(481,"Unauthorised Request");
+    }
+    let unverifiedStore = [];
+    await Store.find({})
+    .populate("manager")
+    .then((stores) => {
+        for(let i=0;i<stores.length;i++){
+            if(stores[i].isVerified==false){
+                unverifiedStore.push(stores[i]);
+            }
+        }
+    })
+    res.json(new ApiResponse(200,"Fetched unverified store successfully!!",unverifiedStore));
+}
+
+export {getNearestStore,verifyStore,registerStore,storeManagerLogin,addToInventory,updateInventory,deleteFromInventory,fetchVerifiedStore,fetchUnVerifiedStore}; 

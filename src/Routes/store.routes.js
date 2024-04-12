@@ -1,10 +1,12 @@
 import {Router} from "express";
-import { getNearestStore ,registerStore,verifyStore,storeManagerLogin, addToInventory, deleteFromInventory, updateInventory } from "../Controllers/store.controller.js";
+import { getNearestStore ,registerStore,verifyStore,storeManagerLogin, addToInventory, deleteFromInventory, updateInventory, fetchVerifiedStore, fetchUnVerifiedStore } from "../Controllers/store.controller.js";
 import authMiddleware from "../Middlewares/auth.middleware.js";
 import { multerUpload } from "../Middlewares/multer.middleware.js";
 const router = Router();
 
 router.get("/getNearestStore",getNearestStore) ;
+router.get("/fetchverified",authMiddleware,fetchVerifiedStore);
+router.get("/fetchunverified",authMiddleware,fetchUnVerifiedStore);
 
 router.post("/registerStore",authMiddleware,registerStore);
 router.post("/verifyStore",authMiddleware,verifyStore);
