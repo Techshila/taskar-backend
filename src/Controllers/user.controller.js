@@ -130,7 +130,7 @@ const loginUser = asyncHandler(async (req,res,next)=>{
     }else{
      searchedUser = await User.findOne({
         username,
-     })   
+     })
     }}catch(err){
         throw new ApiError(500,"Error in finding user",[err],err.stack);
     }
@@ -145,17 +145,19 @@ const loginUser = asyncHandler(async (req,res,next)=>{
    }    
    //now password is correct 
    searchedUser.password = undefined;
-   searchedUser.refreshToken = undefined;
+   searchedUser.refreshToken = "saasdf";
    const options = {
     httpOnly: true,
     secure: true
 }
   const accessToken = await searchedUser.generateAccessToken()
+  const sahiUser = searchedUser.toObject();
+  sahiUser.accessToken = accessToken;
 
    res.status(202)
    .cookie("accessToken",accessToken,options)
    .json(
-    new ApiResponse(202,"Log in Successful",searchedUser)
+    new ApiResponse(202,"Log in Successful",sahiUser)
    )
 })
 const deleteUser = async function(req,res){
