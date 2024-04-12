@@ -68,7 +68,7 @@ const userSchema = new Schema({
     },
     orders:[{
         type:Schema.Types.ObjectId,
-        ref:"Order"
+        ref:"Transaction"
     }],
     refereshToken:{
         type:String,

@@ -43,7 +43,9 @@ import medicineRouter from "./Routes/medicine.route.js"
 app.use("/api/v1/medicine",medicineRouter);
 
 
-
+//transaction routes
+import transactionRouter from "./Routes/transaction.route.js"
+app.use("/api/v1/transaction",transactionRouter);
 
 
 
