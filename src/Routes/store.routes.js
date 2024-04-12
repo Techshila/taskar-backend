@@ -14,5 +14,4 @@ router.post("/storeManagerLogin",multerUpload.none(),storeManagerLogin);
 
 
 
-
 export default router;
