@@ -5,11 +5,11 @@ const transactionSchema = new Schema({
         ref:"User",
         required:true,
     },
-    store:[{
+    store:{
         type:Schema.Types.ObjectId,
         ref:"Store",
         required:true,
-    }],
+    },
 
     paymentId:[{ //status ,order id , and all can be fetched from razorpay using this id
         type:String, //razorpay payment id

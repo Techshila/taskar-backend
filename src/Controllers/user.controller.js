@@ -7,6 +7,7 @@ import {makePartialValidatorByPickingKeys} from "../Utils/Zod.js"
 import {asyncHandler}  from "../Utils/asynchandler.js"
 import uploadOnCloud from "../Utils/Cloudinary.js"
 import { Medicine } from "../Models/medicine.model.js";
+import { Store } from "../Models/store.model.js";
 
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -238,6 +239,35 @@ const createreview = async function (req, res) {
     })
     res.json(new ApiResponse(200,"Created review successfully!!"));
   };
+const getNearestStore = async function(req,res){
+    const {latitude,longitude} = req.body;
+    const user = req.user;
+    if(!user){
+        throw new ApiError(401,"Unauthorized User");
+    }
+   
+    const store = await Store.aggregate([
+        {
+          '$geoNear': {
+            'near': {
+              'type': 'Point', 
+              'coordinates': [
+                longitude, latitude
+              ]
+            }, 
+            'distanceField': 'distance.calculated', 
+            'query': {
+              'isVerified': true
+            }, 
+            'includeLocs': 'distance.location', 
+            'spherical': true
+          }
+        }, {
+          '$limit': 1
+        }
+      ])
+    res.json(new ApiResponse(200,"Nearest Store Found",store));
+}
 
-export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut,deleteUser};
+export {createreview,registerUser,loginUser,updateUser,updateUserAvatar,logOut,deleteUser,getNearestStore};
 
