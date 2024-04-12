@@ -6,7 +6,7 @@ import ApiError from "../Utils/ApiError.js";
 import ApiResponse from "../Utils/ApiResponse.js";
 import {User} from "../Models/user.model.js";
 import { Medicine } from "../Models/medicine.model.js";
-
+import {Transaction} from "../Models/transaction.model.js";
 const getNearestStore = async function(location){
     let stores = await Store.find({
         $near: {
@@ -243,4 +243,31 @@ const fetchUnVerifiedStore = async function(req,res){
     res.json(new ApiResponse(200,"Fetched unverified store successfully!!",unverifiedStore));
 }
 
-export {getNearestStore,verifyStore,registerStore,storeManagerLogin,addToInventory,updateInventory,deleteFromInventory,fetchVerifiedStore,fetchUnVerifiedStore}; 
+const fetchPendingOrders = async function(req,res){
+    const {storeid} = req.body.storeid;
+    const Orders = await Transaction.find({store:storeid,isComplete:false});
+    if(!Orders){
+        throw new ApiError(500,"Error in fetching Orders!!");
+    };
+    res.status(200).json(new ApiResponse(200,"Fetched Orders Successfully!!",Orders));
+
+}
+const fetchCompletedOrders = async function(req,res){
+    const {storeid} = req.body;
+    const Orders = await Transaction.find({store:storeid,isComplete:true});
+    if(!Orders){
+        throw new ApiError(500,"Error in fetching Orders!!");
+    };
+    res.status(200).json(new ApiResponse(200,"Fetched Orders Successfully!!",Orders));
+}
+const VerifyingOrder = async function(req,res){
+    const {orderid} = req.body;
+    const order = await Transaction.findByIdAndUpdate(orderid,{isComplete:true},{new:true});
+    if(!order){
+        throw new ApiError(500,"Error in verifying Order!!");
+    }
+    res.status(200).json(new ApiResponse(200,"Order Verified Successfully!!",order));
+
+}
+
+export {getNearestStore,verifyStore,registerStore,storeManagerLogin,addToInventory,updateInventory,deleteFromInventory,fetchCompletedOrders,fetchPendingOrders,VerifyingOrder,fetchVerifiedStore,fetchUnVerifiedStore}; 
