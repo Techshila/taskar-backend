@@ -17,5 +17,4 @@ router.post("/updateInventory",authMiddleware,updateInventory);
 
 
 
-
 export default router;
