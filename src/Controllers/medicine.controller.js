@@ -8,7 +8,7 @@ import uploadOnCloud from "../Utils/Cloudinary.js";
 const display = async function(req,res){
     let a = [];
     await Medicine.find({})
-        .populate("Category")
+        .populate("categories")
         .sort("-createdAt")
         .then((medicines)=>{
             for(let i=0; i<medicines.length; i++){

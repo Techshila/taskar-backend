@@ -107,7 +107,7 @@ const storeManagerLogin = async function(req,res){
     }
     //store found
     //updating userRole
-    const accessToken ={};
+    const accessToken  = await searchedUser.generateAccessToken(); ;
     const options = {
         httpOnly: true,
         secure: true
@@ -119,7 +119,7 @@ const storeManagerLogin = async function(req,res){
     if(!finalUser){
         throw new ApiError(500,"Error in updating user role");
     }
-     accessToken = await finalUser.generateAccessToken();
+    
     //remove password and refersh Token
     finalUser.password = undefined;
     finalUser.refereshToken = undefined;
@@ -127,7 +127,7 @@ const storeManagerLogin = async function(req,res){
   
     res.status(200)
     
-    json(new ApiResponse(200,"Store Manager Logged in Successfully!!",{store,searchedUser:finalUser}));     
+    json(new ApiResponse(200,"Store Manager Logged in Successfully!!",{store,searchedUfinalUser}));     
 }
     res.status(200).
     cookie("accessToken",accessToken,options).
@@ -141,7 +141,7 @@ const addToInventory = async function(req,res){
     await Medicine.find({}).then((medicine) => {
         if(medicine){
             for(let i=0;i<medicine.length;i++){
-                if(medicine[i].name==name){
+                if(medicine[i].name.toLowerCase()==name.toLowerCase()){
                     mediId = medicine[i]._id;
                     break;
                 }

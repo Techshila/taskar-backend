@@ -11,10 +11,10 @@ const transactionSchema = new Schema({
         required:true,
     },
 
-    paymentId:[{ //status ,order id , and all can be fetched from razorpay using this id
+    paymentId:{ //status ,order id , and all can be fetched from razorpay using this id
         type:String, //razorpay payment id
         required:true,
-    }],
+    },
 
     items:[{
         medicine:{type:Schema.Types.ObjectId,
@@ -24,6 +24,14 @@ const transactionSchema = new Schema({
             required:true,
         },
     }],
+    isComplete:{
+        type:Boolean,
+        default:false,
+    },
+    amount:{
+        type:Number,
+        required:true,
+    },
 },{timestamps:true});
 
 export const Transaction = model("Transaction",transactionSchema);
