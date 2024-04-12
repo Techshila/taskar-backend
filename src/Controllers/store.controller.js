@@ -107,7 +107,11 @@ const storeManagerLogin = async function(req,res){
     }
     //store found
     //updating userRole
-    
+    const accessToken ={};
+    const options = {
+        httpOnly: true,
+        secure: true
+    };
     if(!searchedUser.isStoreManager){
         searchedUser.isStoreManager = true;
         
@@ -115,9 +119,19 @@ const storeManagerLogin = async function(req,res){
     if(!finalUser){
         throw new ApiError(500,"Error in updating user role");
     }
-    res.status(200).json(new ApiResponse(200,"Store Manager Logged in Successfully!!",{store,finalUser}));     
+     accessToken = await finalUser.generateAccessToken();
+    //remove password and refersh Token
+    finalUser.password = undefined;
+    finalUser.refereshToken = undefined;
+    //access Token 
+  
+    res.status(200)
+    
+    json(new ApiResponse(200,"Store Manager Logged in Successfully!!",{store,searchedUser:finalUser}));     
 }
-    res.status(200).json(new ApiResponse(200,"Store Manager Logged in Successfully!!",{store,searchedUser}));
+    res.status(200).
+    cookie("accessToken",accessToken,options).
+    json(new ApiResponse(200,"Store Manager Logged in Successfully!!",{store,searchedUser}));
 
  }
 
